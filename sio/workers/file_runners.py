@@ -156,6 +156,7 @@ class Python3(LanguageModeWrapper):
         kwargs['binds'] = [('/dev/zero', '/dev/urandom', 'ro,dev'),
                            (prog_dir, inner_dir, 'ro')]
 
+        self._download_extra_execution_files(_dest=prog_dir, **kwargs)
         return self.executor(python + [inner_file] + args, **kwargs)
 
     def preferred_filename(self):
