@@ -27,6 +27,9 @@ class PythonCompiler(Compiler):
 
         source_dir = os.path.dirname(self.source_file)
 
+        for source in map(os.path.basename, self.additional_sources):
+            shutil.copy(tempcwd(source), tempcwd(source_dir))
+
         compileall = python + ['-m', 'compileall',
                                self.rcwd(source_dir),
                               ]
