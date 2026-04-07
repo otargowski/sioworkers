@@ -121,6 +121,7 @@ def compile_and_run(compiler_env, expected_output, program_args=None):
         executor = PRoot32BitExecutor('compiler-java.1_8')
         frkwargs['proot_options'] = ['-b', '/proc']
 
+    frkwargs['environ'] = result_env
     frunner = get_file_runner(executor, result_env)
     with frunner:
         renv = frunner(
@@ -315,6 +316,34 @@ def test_compilation_with_additional_library_and_dictionary_params(
             message,
         )
 
+
+def _make_python_compilation_with_extra_execution_files_cases():
+    for compiler in PYTHON_COMPILERS:
+        yield 'Hello World from py-lib', compiler, '/simple-lib.py',
+
+
+@pytest.mark.parametrize(
+    "message,compiler,source",
+    [
+        test_case
+        for test_case in _make_python_compilation_with_extra_execution_files_cases()
+    ],
+)
+def test_python_compilation_with_extra_execution_files_cases(
+    message, compiler, source
+):
+    with TemporaryCwd():
+        upload_files()
+
+        compile_and_run(
+            {
+                'source_file': source,
+                'extra_execution_files': {'library.py': '/library.py'},
+                'compiler': compiler,
+                'out_file': '/out',
+            },
+            message,
+        )
 
 def _make_compilation_with_additional_archive_cases():
     yield 'Hello World from c-lib', 'system-c', '/simple-lib.c', '/library.c', '/library-archive.zip', [

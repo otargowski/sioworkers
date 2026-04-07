@@ -150,7 +150,7 @@ class Python3(LanguageModeWrapper):
         mkdir(prog_dir)
 
         with tarfile.open(file) as tf:
-            tf.extractall(prog_dir)
+            tf.extractall(prog_dir, filter='data')
 
         kwargs['no_bind_binary'] = True
         kwargs['binds'] = [('/dev/zero', '/dev/urandom', 'ro,dev'),
